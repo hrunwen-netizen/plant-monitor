@@ -44,12 +44,10 @@
     },
     {
       "name": "Heliamphora ciliata (Lowland)",
-      "type": "keyword",
+      "type": "url",
       "maxPrice": 100,
       "enabled": true,
-      "keywords": [
-        "Heliamphora ciliata (Lowland)"
-      ]
+      "url": "https://wistuba.com/Squamellaria-wilsonii-Taveuni-Fiji/AW-Sq-wils.1"
     }
   ],
   "monitor": {
