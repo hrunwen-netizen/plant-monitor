@@ -24,10 +24,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 设置 Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: 上传 web 目录
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: 'web'
 
