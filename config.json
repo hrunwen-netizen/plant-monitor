@@ -26,16 +26,30 @@
     {
       "name": "Nepenthes villosa",
       "type": "keyword",
-      "keywords": ["villosa", "Nepenthes villosa"],
+      "keywords": [
+        "villosa",
+        "Nepenthes villosa"
+      ],
       "maxPrice": 200,
       "enabled": false
     },
     {
       "name": "Nepenthes lowii",
       "type": "keyword",
-      "keywords": ["lowii"],
+      "keywords": [
+        "lowii"
+      ],
       "maxPrice": 150,
       "enabled": false
+    },
+    {
+      "name": "Heliamphora ciliata (Lowland)",
+      "type": "keyword",
+      "maxPrice": 100,
+      "enabled": true,
+      "keywords": [
+        "Heliamphora ciliata (Lowland)"
+      ]
     }
   ],
   "monitor": {
