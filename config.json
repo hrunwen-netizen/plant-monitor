@@ -1,0 +1,46 @@
+{
+  "notifications": {
+    "pushplus": {
+      "enabled": true,
+      "token": "9cd770b3f3c74ec59dcdab7228317ce5"
+    },
+    "email": {
+      "enabled": false,
+      "smtp": {
+        "host": "smtp.qq.com",
+        "port": 465,
+        "user": "YOUR_QQ_EMAIL@qq.com",
+        "pass": "YOUR_QQ_SMTP_AUTH_CODE"
+      },
+      "to": "YOUR_RECEIVE_EMAIL@qq.com"
+    }
+  },
+  "plants": [
+    {
+      "name": "Squamellaria jebbiana (Taveuni Island)",
+      "type": "url",
+      "url": "https://wistuba.com/Squamellaria-jebbiana-Taveuni-Island-Fiji/Sq-jebb-Tv",
+      "maxPrice": 100,
+      "enabled": true
+    },
+    {
+      "name": "Nepenthes villosa",
+      "type": "keyword",
+      "keywords": ["villosa", "Nepenthes villosa"],
+      "maxPrice": 200,
+      "enabled": false
+    },
+    {
+      "name": "Nepenthes lowii",
+      "type": "keyword",
+      "keywords": ["lowii"],
+      "maxPrice": 150,
+      "enabled": false
+    }
+  ],
+  "monitor": {
+    "checkIntervalMinutes": 15,
+    "autoAddToCart": false,
+    "cartNotifyOnly": true
+  }
+}

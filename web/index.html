@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌿 植物自动监控</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 顶部导航 -->
+  <header class="header">
+    <div class="header-inner">
+      <h1 class="logo">🌿 植物自动监控</h1>
+      <nav class="nav" id="nav">
+        <button class="nav-btn active" data-tab="plants">📋 植物清单</button>
+        <button class="nav-btn" data-tab="logs">📊 运行日志</button>
+        <button class="nav-btn" data-tab="notifications">🔔 通知设置</button>
+        <button class="nav-btn" data-tab="settings">⚙️ 设置</button>
+      </nav>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="btn-run-now">🔄 手动检查</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 状态栏 -->
+  <div class="status-bar">
+    <div class="status-bar-inner">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">未连接 GitHub</span>
+      <span class="status-sep">|</span>
+      <span id="last-check-time">尚未检查</span>
+    </div>
+  </div>
+
+  <!-- 主内容区 -->
+  <main class="main">
+
+    <!-- 植物清单页 -->
+    <section class="tab-content active" id="tab-plants">
+      <div class="section-header">
+        <h2>📋 监控植物清单</h2>
+        <div class="section-actions">
+          <span class="count-badge" id="plant-count">0 个植物</span>
+          <button class="btn btn-success" id="btn-add-plant">➕ 添加植物</button>
+          <button class="btn btn-outline" id="btn-save-plants" style="display:none;">💾 保存到 GitHub</button>
+          <span class="unsaved-indicator" id="unsaved-indicator" style="display:none;">⚠️ 有未保存的更改</span>
+        </div>
+      </div>
+
+      <div class="plant-list" id="plant-list">
+        <div class="empty-state">
+          <div class="empty-icon">🪴</div>
+          <p>还没有监控任何植物</p>
+          <p class="text-muted">点击 "添加植物" 开始，粘贴 wistuba.com 的产品链接即可</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 运行日志页 -->
+    <section class="tab-content" id="tab-logs">
+      <div class="section-header">
+        <h2>📊 运行日志</h2>
+        <button class="btn btn-outline" id="btn-refresh-logs">🔄 刷新</button>
+      </div>
+      <div class="log-list" id="log-list">
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p>暂无日志</p>
+          <p class="text-muted">连接 GitHub 后可以查看 Actions 运行记录</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 通知设置页 -->
+    <section class="tab-content" id="tab-notifications">
+      <div class="section-header">
+        <h2>🔔 通知设置</h2>
+        <button class="btn btn-success" id="btn-save-notifications">💾 保存通知设置</button>
+      </div>
+
+      <div class="settings-card">
+        <h3>📱 PushPlus 微信通知</h3>
+        <div class="form-group">
+          <label>启用</label>
+          <label class="switch">
+            <input type="checkbox" id="pushplus-enabled" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label>PushPlus Token</label>
+          <input type="text" id="pushplus-token" class="input-full" placeholder="从 pushplus.plus 获取">
+          <span class="form-hint">注册地址: <a href="https://www.pushplus.plus/" target="_blank">pushplus.plus</a></span>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h3>📧 邮件通知 (QQ邮箱)</h3>
+        <div class="form-group">
+          <label>启用</label>
+          <label class="switch">
+            <input type="checkbox" id="email-enabled">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label>发件邮箱</label>
+          <input type="email" id="email-user" class="input-full" placeholder="你的QQ邮箱@qq.com">
+        </div>
+        <div class="form-group">
+          <label>SMTP 授权码</label>
+          <input type="password" id="email-pass" class="input-full" placeholder="QQ邮箱SMTP授权码（16位）">
+          <span class="form-hint">不是QQ密码！在 QQ邮箱 → 设置 → 账户 → SMTP服务 中获取</span>
+        </div>
+        <div class="form-group">
+          <label>接收通知的邮箱</label>
+          <input type="email" id="email-to" class="input-full" placeholder="可以和发件邮箱相同">
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <h3>🔔 通知频率</h3>
+        <div class="form-group">
+          <label>同一产品重复通知间隔</label>
+          <select id="notify-cooldown" class="input-full">
+            <option value="12">12 小时</option>
+            <option value="24" selected>24 小时</option>
+            <option value="48">48 小时</option>
+            <option value="72">72 小时</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 设置页 -->
+    <section class="tab-content" id="tab-settings">
+      <div class="section-header">
+        <h2>⚙️ 系统设置</h2>
+      </div>
+
+      <div class="settings-card">
+        <h3>🔗 GitHub 连接</h3>
+        <div class="form-group">
+          <label>GitHub 用户名</label>
+          <input type="text" id="github-user" class="input-full" placeholder="你的 GitHub 用户名">
+        </div>
+        <div class="form-group">
+          <label>仓库名</label>
+          <input type="text" id="github-repo" class="input-full" placeholder="plant-monitor">
+        </div>
+        <div class="form-group">
+          <label>GitHub Token</label>
+          <input type="password" id="github-token" class="input-full" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+          <span class="form-hint">
+            需要 <code>repo</code> 权限。
+            <a href="https://github.com/settings/tokens/new?scopes=repo&description=plant-monitor-web" target="_blank">
+              点击这里创建 Token →
+            </a>
+          </span>
+        </div>
+        <button class="btn btn-primary" id="btn-connect-github">🔗 连接 GitHub</button>
+        <span id="github-status" class="form-hint"></span>
+      </div>
+
+      <div class="settings-card">
+        <h3>⏱ 监控设置</h3>
+        <div class="form-group">
+          <label>检查间隔（分钟）</label>
+          <input type="number" id="check-interval" class="input-full" value="15" min="5" max="60">
+        </div>
+        <div class="form-group">
+          <label>自动加入购物车（实验功能）</label>
+          <label class="switch">
+            <input type="checkbox" id="auto-add-cart">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 添加/编辑植物弹窗 -->
+  <div class="modal-overlay" id="modal-overlay" style="display:none;">
+    <div class="modal" id="plant-modal">
+      <div class="modal-header">
+        <h3 id="modal-title">添加新植物</h3>
+        <button class="btn-close" id="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>植物名称 *</label>
+          <input type="text" id="modal-name" class="input-full" placeholder="例如: Nepenthes villosa">
+        </div>
+
+        <div class="form-group">
+          <label>监控方式 *</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="modal-type" value="url" checked>
+              <span>🔗 URL 精确监控</span>
+              <span class="radio-hint">粘贴产品链接，精准检测该链接状态</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="modal-type" value="keyword">
+              <span>🔍 关键词搜索</span>
+              <span class="radio-hint">输入关键词，在网站上搜索匹配产品</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group" id="modal-url-group">
+          <label>产品 URL *</label>
+          <input type="url" id="modal-url" class="input-full" placeholder="https://wistuba.com/产品名/SKU">
+          <span class="form-hint">在 wistuba.com 打开产品页面，复制完整链接粘贴到这里</span>
+        </div>
+
+        <div class="form-group" id="modal-keywords-group" style="display:none;">
+          <label>关键词 *（逗号分隔多个关键词）</label>
+          <input type="text" id="modal-keywords" class="input-full" placeholder="villosa, Nepenthes villosa">
+          <span class="form-hint">每个关键词都会搜索，建议中英文各一个</span>
+        </div>
+
+        <div class="form-group">
+          <label>价格上限 €（超过不提醒）</label>
+          <input type="number" id="modal-price" class="input-full" placeholder="200" min="1">
+        </div>
+
+        <div class="form-group">
+          <label>启用监控</label>
+          <label class="switch">
+            <input type="checkbox" id="modal-enabled" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <input type="hidden" id="modal-edit-index" value="-1">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="btn-cancel-modal">取消</button>
+        <button class="btn btn-success" id="btn-confirm-modal">✅ 保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast 提示 -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
