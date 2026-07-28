@@ -2,10 +2,7 @@
   "notifications": {
     "pushplus": {
       "enabled": true,
-      "tokens": [
-        "9cd770b3f3c74ec59dcdab7228317ce5",
-        "82163592420c4d77b2131897e9eebcbc"
-      ]
+      "token": ""
     },
     "email": {
       "enabled": false,
@@ -32,6 +29,13 @@
       "maxPrice": 100,
       "enabled": true,
       "url": "https://wistuba.com/Squamellaria-wilsonii-Taveuni-Fiji/AW-Sq-wils"
+    },
+    {
+      "name": "Heliamphora black cherry",
+      "type": "url",
+      "maxPrice": 100,
+      "enabled": true,
+      "url": "https://wistuba.com/Heliamphora-Black-Cherry/AW-H-BC"
     }
   ],
   "monitor": {
