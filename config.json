@@ -24,15 +24,6 @@
       "enabled": true
     },
     {
-      "name": "Nepenthes lowii",
-      "type": "keyword",
-      "keywords": [
-        "lowii"
-      ],
-      "maxPrice": 150,
-      "enabled": false
-    },
-    {
       "name": "Heliamphora ciliata (Lowland)",
       "type": "url",
       "maxPrice": 100,
@@ -48,6 +39,16 @@
         "Hydnophytum",
         "ferrugineum",
         "Australia"
+      ]
+    },
+    {
+      "name": "Squamellaria wilsonii",
+      "type": "keyword",
+      "maxPrice": 100,
+      "enabled": true,
+      "keywords": [
+        "Squamellaria",
+        "wilsonii"
       ]
     }
   ],
