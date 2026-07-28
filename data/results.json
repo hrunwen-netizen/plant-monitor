@@ -7,7 +7,7 @@
     "status": "sold_out",
     "price": 100,
     "error": null,
-    "lastChecked": "2026-07-28T08:15:21.613Z"
+    "lastChecked": "2026-07-28T08:17:53.976Z"
   },
   {
     "name": "Squamellaria-wilsonii",
@@ -17,6 +17,16 @@
     "status": "sold_out",
     "price": 75,
     "error": null,
-    "lastChecked": "2026-07-28T08:15:25.494Z"
+    "lastChecked": "2026-07-28T08:17:57.717Z"
+  },
+  {
+    "name": "Heliamphora black cherry",
+    "type": "url",
+    "url": "https://wistuba.com/Heliamphora-Black-Cherry/AW-H-BC",
+    "keywords": null,
+    "status": "available",
+    "price": 20,
+    "error": null,
+    "lastChecked": "2026-07-28T08:17:59.506Z"
   }
 ]
