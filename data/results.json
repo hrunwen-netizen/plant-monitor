@@ -7,39 +7,16 @@
     "status": "sold_out",
     "price": 100,
     "error": null,
-    "lastChecked": "2026-07-28T07:53:01.252Z"
+    "lastChecked": "2026-07-28T07:55:21.370Z"
   },
   {
-    "name": "Heliamphora ciliata (Lowland)",
+    "name": "Squamellaria-wilsonii",
     "type": "url",
-    "url": "https://wistuba.com/Heliamphora-ciliata-Lowland/AW-H-cil",
+    "url": "https://wistuba.com/Squamellaria-wilsonii-Taveuni-Fiji/AW-Sq-wils",
     "keywords": null,
-    "status": "available",
-    "price": 40,
+    "status": "sold_out",
+    "price": 75,
     "error": null,
-    "lastChecked": "2026-07-28T07:53:03.696Z"
-  },
-  {
-    "name": "Hydnophytum ferrugineum",
-    "type": "keyword",
-    "url": null,
-    "keywords": [
-      "Hydnophytum",
-      "ferrugineum",
-      "Australia"
-    ],
-    "status": "available",
-    "lastChecked": "2026-07-28T07:53:15.584Z"
-  },
-  {
-    "name": "Squamellaria wilsonii",
-    "type": "keyword",
-    "url": null,
-    "keywords": [
-      "Squamellaria",
-      "wilsonii"
-    ],
-    "status": "available",
-    "lastChecked": "2026-07-28T07:53:23.157Z"
+    "lastChecked": "2026-07-28T07:55:25.258Z"
   }
 ]
