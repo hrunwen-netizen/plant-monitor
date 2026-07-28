@@ -38,8 +38,12 @@ jobs:
       - name: 提交状态更新
         if: always()
         run: |
-          git config --local user.email "plant-monitor[bot]@users.noreply.github.com"
-          git config --local user.name "植物监控机器人"
-          git add data/last-state.json
-          git diff --staged --quiet || git commit -m "📊 更新监控状态 [skip ci]"
-          git push || true
+          if [ -f data/last-state.json ]; then
+            git config --local user.email "plant-monitor[bot]@users.noreply.github.com"
+            git config --local user.name "植物监控机器人"
+            git add data/last-state.json
+            git diff --staged --quiet || git commit -m "📊 更新监控状态 [skip ci]"
+            git push || echo "推送失败（不影响主流程）"
+          else
+            echo "状态文件不存在，跳过提交"
+          fi
