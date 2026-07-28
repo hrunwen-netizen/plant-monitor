@@ -7,7 +7,7 @@
     "status": "sold_out",
     "price": 100,
     "error": null,
-    "lastChecked": "2026-07-28T06:58:57.457Z"
+    "lastChecked": "2026-07-28T07:00:29.335Z"
   },
   {
     "name": "Heliamphora ciliata (Lowland)",
@@ -17,6 +17,18 @@
     "status": "available",
     "price": 40,
     "error": null,
-    "lastChecked": "2026-07-28T06:58:59.560Z"
+    "lastChecked": "2026-07-28T07:00:31.598Z"
+  },
+  {
+    "name": "Hydnophytum ferrugineum",
+    "type": "keyword",
+    "url": null,
+    "keywords": [
+      "Hydnophytum",
+      "ferrugineum",
+      "Australia"
+    ],
+    "status": "available",
+    "lastChecked": "2026-07-28T07:00:49.416Z"
   }
 ]
