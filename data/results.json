@@ -7,6 +7,16 @@
     "status": "sold_out",
     "price": 100,
     "error": null,
-    "lastChecked": "2026-07-28T06:49:13.655Z"
+    "lastChecked": "2026-07-28T06:54:28.013Z"
+  },
+  {
+    "name": "Heliamphora ciliata (Lowland)",
+    "type": "url",
+    "url": "https://wistuba.com/Heliamphora-ciliata-Lowland/AW-H-cil",
+    "keywords": null,
+    "status": "available",
+    "price": 40,
+    "error": null,
+    "lastChecked": "2026-07-28T06:54:30.151Z"
   }
 ]
