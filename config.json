@@ -2,7 +2,10 @@
   "notifications": {
     "pushplus": {
       "enabled": true,
-      "token": "9cd770b3f3c74ec59dcdab7228317ce5"
+      "tokens": [
+        "9cd770b3f3c74ec59dcdab7228317ce5",
+        "82163592420c4d77b2131897e9eebcbc"
+      ]
     },
     "email": {
       "enabled": false,

@@ -202,10 +202,15 @@ async function sendNotifications(config, notifications) {
 
   const results = [];
 
-  // PushPlus 微信通知
+  // PushPlus 微信通知（支持多个Token，每个人都能收到）
   if (config.pushplus && config.pushplus.enabled) {
-    const result = await sendPushPlus(config.pushplus, title, markdown);
-    results.push({ channel: 'PushPlus', ...result });
+    // 支持单个 token 或 tokens 数组
+    const tokens = config.pushplus.tokens || (config.pushplus.token ? [config.pushplus.token] : []);
+
+    for (const token of tokens) {
+      const result = await sendPushPlus({ token, enabled: true }, title, markdown);
+      results.push({ channel: 'PushPlus', token: token.substring(0, 8) + '...', ...result });
+    }
   }
 
   // 邮箱通知
