@@ -293,6 +293,13 @@ body {
 .badge-keyword { background: #fef3c7; color: #92400e; }
 .badge-active { background: #dcfce7; color: #166534; }
 .badge-paused { background: #fee2e2; color: #991b1b; }
+.badge-status { font-weight: 600; }
+.badge-status.available { background: #dcfce7; color: #166534; }
+.badge-status.short_supply { background: #fef3c7; color: #92400e; }
+.badge-status.sold_out { background: #fee2e2; color: #991b1b; }
+.badge-status.unknown { background: #f3f4f6; color: #6b7280; }
+.badge-status.error { background: #fee2e2; color: #991b1b; }
+.badge-status.new { background: #dbeafe; color: #1e40af; }
 
 .plant-card-info {
   display: flex;

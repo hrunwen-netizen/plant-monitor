@@ -13,6 +13,8 @@
 const STORAGE_KEY_GITHUB = 'plant-monitor-github';
 const STORAGE_KEY_PLANTS = 'plant-monitor-plants-draft';
 const CONFIG_PATH = 'config.json';
+const RESULTS_PATH = 'data/results.json';
+const HISTORY_PATH = 'data/history.json';
 
 // ============ 状态 ============
 let plants = [];
@@ -20,6 +22,8 @@ let config = null;
 let githubConnected = false;
 let gitHubInfo = { user: '', repo: '', token: '' };
 let isDirty = false;
+let lastResults = {};   // 最新检查结果，key 为植物 name
+let lastHistory = [];   // 历史记录
 
 // ============ DOM 引用 ============
 const $ = (sel) => document.querySelector(sel);
@@ -37,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (githubConnected) {
     fetchConfigFromGitHub();
+    fetchResultsFromGitHub();
     updateGitHubStatus('已连接', 'connected');
   }
 });
@@ -101,6 +106,7 @@ function initNav() {
     if (btn.dataset.tab === 'logs') loadLogs();
     if (btn.dataset.tab === 'settings') loadSettings();
     if (btn.dataset.tab === 'notifications') loadNotifications();
+    if (btn.dataset.tab === 'plants' && githubConnected) fetchResultsFromGitHub();
   });
 
   $('#btn-run-now').addEventListener('click', triggerManualCheck);
@@ -121,7 +127,15 @@ function renderPlants() {
     return;
   }
 
-  list.innerHTML = plants.map((p, i) => `
+  list.innerHTML = plants.map((p, i) => {
+    const key = p.name;
+    const result = lastResults[key];
+    const statusIcon = getStatusIcon(result ? result.status : null);
+    const statusText = getStatusText(result ? result.status : null);
+    const checkedTime = result ? timeAgo(result.lastChecked) : '尚未检查';
+    const hasPrice = result && result.price != null;
+
+    return `
     <div class="plant-card ${p.enabled ? '' : 'paused'}">
       <div class="plant-card-header">
         <div class="plant-card-name">
@@ -135,13 +149,16 @@ function renderPlants() {
           <span class="badge ${p.enabled ? 'badge-active' : 'badge-paused'}">
             ${p.enabled ? '监控中' : '已暂停'}
           </span>
+          ${result ? `<span class="badge badge-status ${result.status || 'unknown'}">${statusIcon} ${statusText}</span>` : ''}
         </div>
       </div>
 
       <div class="plant-card-info">
         <span>💰 价格上限: <strong>€${p.maxPrice || '不限'}</strong></span>
+        ${hasPrice ? `<span>💶 当前价格: <strong>€${result.price}</strong></span>` : ''}
+        <span>🕐 最近检查: <strong>${checkedTime}</strong></span>
         ${p.type === 'url'
-          ? `<span>🔗 URL: ${escapeHtml(p.url || '')}</span>`
+          ? `<span>🔗 <a href="${escapeHtml(p.url || '')}" target="_blank" class="log-link">打开产品页 →</a></span>`
           : `<span>🏷 关键词: ${(p.keywords || []).join(', ')}</span>`
         }
       </div>
@@ -154,7 +171,7 @@ function renderPlants() {
         <button class="btn btn-danger btn-sm" onclick="deletePlant(${i})">🗑 删除</button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 
   updateUnsavedIndicator();
 }
@@ -355,6 +372,9 @@ async function fetchConfigFromGitHub() {
       updateGitHubStatus('已连接 ✅', 'connected');
       $('#github-status').textContent = `✅ 已连接，SHA: ${configSha.substring(0, 7)}`;
       showToast('success', '已从 GitHub 加载配置');
+
+      // 连接后立即加载检查结果
+      fetchResultsFromGitHub();
     } else if (response.status === 401) {
       updateGitHubStatus('Token 无效', 'disconnected');
       $('#github-status').textContent = '❌ Token 无效，请检查';
@@ -371,6 +391,77 @@ async function fetchConfigFromGitHub() {
     updateGitHubStatus('网络错误', 'disconnected');
     $('#github-status').textContent = `❌ 网络错误: ${e.message}`;
   }
+}
+
+async function fetchResultsFromGitHub() {
+  if (!githubConnected) return;
+
+  try {
+    const resp = await githubApi(`repos/${gitHubInfo.user}/${gitHubInfo.repo}/contents/${RESULTS_PATH}`);
+    if (resp.ok) {
+      const data = await resp.json();
+      const results = JSON.parse(atob(data.content));
+      lastResults = {};
+      results.forEach(r => { lastResults[r.name] = r; });
+      renderPlants();
+    }
+
+    // 也加载历史
+    const histResp = await githubApi(`repos/${gitHubInfo.user}/${gitHubInfo.repo}/contents/${HISTORY_PATH}`);
+    if (histResp.ok) {
+      const histData = await histResp.json();
+      lastHistory = JSON.parse(atob(histData.content));
+    }
+  } catch (e) {
+    // 结果文件可能还不存在，忽略
+  }
+}
+
+/**
+ * 获取状态图标
+ */
+function getStatusIcon(status) {
+  const map = {
+    'available': '✅',
+    'short_supply': '⚠️',
+    'sold_out': '❌',
+    'new': '🆕',
+    'unknown': '❓',
+    'error': '❓',
+  };
+  return map[status] || '❓';
+}
+
+/**
+ * 获取状态文字
+ */
+function getStatusText(status) {
+  const map = {
+    'available': '可购买',
+    'short_supply': '库存紧张',
+    'sold_out': '已售罄',
+    'new': '新品',
+    'unknown': '未知',
+    'error': '出错',
+  };
+  return map[status] || status;
+}
+
+/**
+ * 友好时间显示
+ */
+function timeAgo(isoString) {
+  if (!isoString) return '未知';
+  const now = Date.now();
+  const then = new Date(isoString).getTime();
+  const diffMin = Math.floor((now - then) / 60000);
+
+  if (diffMin < 1) return '刚刚';
+  if (diffMin < 60) return `${diffMin} 分钟前`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr} 小时前`;
+  const diffDay = Math.floor(diffHr / 24);
+  return `${diffDay} 天前`;
 }
 
 async function savePlantsToGitHub() {

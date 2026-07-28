@@ -9,7 +9,7 @@ const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
 
-const { loadState, saveState, shouldNotify, log, productKey } = require('./utils');
+const { loadState, saveState, shouldNotify, log, productKey, saveResults, saveHistory } = require('./utils');
 const { checkPlant } = require('./checker');
 const { addToCart } = require('./cart');
 const { sendNotifications } = require('./notifier');
@@ -96,6 +96,8 @@ async function runOnce(config) {
 
   try {
     // 遍历所有植物
+    const allResults = [];
+
     for (const plant of config.plants) {
       if (!plant.enabled) continue;
 
@@ -104,6 +106,18 @@ async function runOnce(config) {
       const key = productKey(plant);
 
       if (result.skipped) continue;
+
+      // 收集结果
+      allResults.push({
+        name: plant.name,
+        type: plant.type,
+        url: plant.type === 'url' ? plant.url : null,
+        keywords: plant.type === 'keyword' ? plant.keywords : null,
+        status: result.notifyStatus || result.status,
+        price: result.price,
+        error: result.error,
+        lastChecked: new Date().toISOString(),
+      });
 
       // 判断是否应该通知
       const notifyStatus = result.notifyStatus || result.status;
@@ -151,6 +165,7 @@ async function runOnce(config) {
     }
 
     // 保存状态
+    saveResults(allResults);
     saveState(state);
 
     // 发送通知

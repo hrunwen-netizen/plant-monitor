@@ -6,6 +6,8 @@ const path = require('path');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const STATE_FILE = path.join(DATA_DIR, 'last-state.json');
+const RESULTS_FILE = path.join(DATA_DIR, 'results.json');
+const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
 
 // 确保 data 目录存在
 function ensureDataDir() {
@@ -108,12 +110,46 @@ function buildSearchUrl(keyword) {
   return `https://wistuba.com/search?search=${encodeURIComponent(keyword)}`;
 }
 
+/**
+ * 保存本次检查结果到 results.json
+ * @param {Object[]} results
+ */
+function saveResults(results) {
+  ensureDataDir();
+  fs.writeFileSync(RESULTS_FILE, JSON.stringify(results, null, 2), 'utf-8');
+  log('INFO', `检查结果已保存到 ${RESULTS_FILE}`);
+}
+
+/**
+ * 追加状态变化到 history.json（只在状态有变化时记录）
+ * @param {Object} entry 单条历史记录 { name, from, to, time, price }
+ */
+function saveHistory(entry) {
+  ensureDataDir();
+  let history = [];
+  try {
+    if (fs.existsSync(HISTORY_FILE)) {
+      history = JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf-8'));
+    }
+  } catch (e) {
+    // ignore
+  }
+  history.unshift(entry);
+  // 最多保留100条
+  if (history.length > 100) history = history.slice(0, 100);
+  fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2), 'utf-8');
+}
+
 module.exports = {
   loadState,
   saveState,
   shouldNotify,
+  saveResults,
+  saveHistory,
   log,
   productKey,
   buildSearchUrl,
-  STATE_FILE
+  STATE_FILE,
+  RESULTS_FILE,
+  HISTORY_FILE
 };
