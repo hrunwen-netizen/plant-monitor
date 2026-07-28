@@ -7,7 +7,7 @@
     "status": "sold_out",
     "price": 100,
     "error": null,
-    "lastChecked": "2026-07-28T07:07:11.568Z"
+    "lastChecked": "2026-07-28T07:16:02.821Z"
   },
   {
     "name": "Heliamphora ciliata (Lowland)",
@@ -17,7 +17,7 @@
     "status": "available",
     "price": 40,
     "error": null,
-    "lastChecked": "2026-07-28T07:07:13.499Z"
+    "lastChecked": "2026-07-28T07:16:04.926Z"
   },
   {
     "name": "Hydnophytum ferrugineum",
@@ -29,7 +29,7 @@
       "Australia"
     ],
     "status": "available",
-    "lastChecked": "2026-07-28T07:07:26.466Z"
+    "lastChecked": "2026-07-28T07:16:17.367Z"
   },
   {
     "name": "Squamellaria wilsonii",
@@ -40,6 +40,6 @@
       "wilsonii"
     ],
     "status": "available",
-    "lastChecked": "2026-07-28T07:07:34.599Z"
+    "lastChecked": "2026-07-28T07:16:25.011Z"
   }
 ]

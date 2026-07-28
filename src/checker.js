@@ -47,11 +47,31 @@ async function checkByUrl(page, plant) {
     // 检查是否有 "Add to shopping cart" 按钮
     const addToCartBtn = await page.$('button:has-text("Add to shopping cart")');
 
-    // 检查加购按钮是否可用（disabled = 缺货但选项可选）
+    // 检查加购按钮是否可用（disabled = 缺货或某个size选项不可用）
     let addToCartEnabled = false;
     if (addToCartBtn) {
       addToCartEnabled = !(await addToCartBtn.isDisabled());
     }
+
+    // 检查是否有 disabled 的 option（某些 size 缺货）
+    const disabledOptions = await page.$$('.product-detail-configurator-option-input:disabled, .product-detail-configurator-option-input.not-combinable');
+    const hasDisabledOptions = disabledOptions.length > 0;
+
+    // 检查是否有可用的 option
+    const enabledOptions = await page.$$('.product-detail-configurator-option-input:not(:disabled):not(.not-combinable)');
+    const hasEnabledOptions = enabledOptions.length > 0;
+
+    // 提取所有可用的 size/option 信息
+    let availableOptions = [];
+    try {
+      const optionLabels = await page.$$('.product-detail-configurator-option-label:not(.disabled)');
+      for (const label of optionLabels) {
+        const text = await label.textContent();
+        if (text && text.trim()) {
+          availableOptions.push(text.trim());
+        }
+      }
+    } catch (e) { /* ignore */ }
 
     // 检查是否显示 "Currently not available" —— Shopware缺货标志
     const currentlyNotAvailable =
@@ -108,12 +128,20 @@ async function checkByUrl(page, plant) {
       // 有可用的加购按钮 - 可购买！
       result.status = isShortSupply ? 'short_supply' : 'available';
       result.price = price;
-      log('INFO', `[URL检查] ${plant.name}: ✅ 可购买！状态=${result.status}, 价格=€${price}`);
+      result.options = availableOptions;
+      log('INFO', `[URL检查] ${plant.name}: ✅ 可购买！状态=${result.status}, 价格=€${price}${availableOptions.length > 0 ? ', 可选规格: ' + availableOptions.join(' | ') : ''}`);
+    } else if (addToCartBtn && !addToCartEnabled && hasEnabledOptions) {
+      // 加购按钮被禁用但有可选option — 可能是没选规格
+      result.status = 'available';
+      result.price = price;
+      result.options = availableOptions;
+      result.error = '需要选择规格';
+      log('INFO', `[URL检查] ${plant.name}: 有可选规格但需选择 — 价格=€${price}, 可选: ${availableOptions.join(' | ')}`);
     } else if (addToCartBtn && !addToCartEnabled) {
-      // 有加购按钮但被禁用 - 当前选项不可用
+      // 有加购按钮但被禁用且无可选option — 缺货
       result.status = 'sold_out';
       result.price = price;
-      log('INFO', `[URL检查] ${plant.name}: 加购按钮存在但已禁用，当前不可购买`);
+      log('INFO', `[URL检查] ${plant.name}: 加购按钮已禁用，当前缺货`);
     } else if (hasNotifyMeBtn || currentlyNotAvailable) {
       // 有Notify me按钮 - 当前缺货
       result.status = 'sold_out';
