@@ -24,16 +24,6 @@
       "enabled": true
     },
     {
-      "name": "Nepenthes villosa",
-      "type": "keyword",
-      "keywords": [
-        "villosa",
-        "Nepenthes villosa"
-      ],
-      "maxPrice": 200,
-      "enabled": false
-    },
-    {
       "name": "Nepenthes lowii",
       "type": "keyword",
       "keywords": [
@@ -48,6 +38,17 @@
       "maxPrice": 100,
       "enabled": true,
       "url": "https://wistuba.com/Heliamphora-ciliata-Lowland/AW-H-cil"
+    },
+    {
+      "name": "Hydnophytum ferrugineum",
+      "type": "keyword",
+      "maxPrice": 100,
+      "enabled": true,
+      "keywords": [
+        "Hydnophytum",
+        "ferrugineum",
+        "Australia"
+      ]
     }
   ],
   "monitor": {
