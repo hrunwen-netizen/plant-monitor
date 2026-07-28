@@ -1,5 +1,4 @@
 node_modules/
-data/last-state.json
 *.log
 .env
 .claude/
